@@ -14,12 +14,22 @@ if (!ApplicationStartup.IsRunningAsAdministrator())
     // and this current non-elevated process will terminate.
     // If RestartAsAdministrator fails (e.g., user declines UAC), it will print an error
     // and the current non-elevated process will continue from here.
-    return; // Exit the current non-elevated instance, whether a restart was initiated or failed.
+    return; // Exit the current non-ezlevated instance, whether a restart was initiated or failed.
 }
 
 // --- Application Logic (Only runs if elevated) ---
 // If the code reaches this point, it means the application is now running as administrator.
 Console.WriteLine("Application is running as administrator.");
+
+if (!PrivilegeHelper.EnableDebugPrivilege())
+{
+    Console.WriteLine("Failed to enable SeDebugPrivilege. This might prevent interaction with some processes.");
+    // Decide if you want to exit here, or continue and handle potential failures.
+}
+else
+{
+    Console.WriteLine("SeDebugPrivilege enabled successfully.");
+}
 
 var gameClient = new DuckstationClient();
 bool connected = gameClient.Connect();
